@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,14 +28,30 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
     private double globalDamageMultiplier;
     private boolean keepHeroOnDeath;
 
-    // משתנים ומחלקות עזר שה-Abilities שלך דורש
-    public final Map<UUID, Object> history = new HashMap<>();
-    public final Map<UUID, Object> awaitingCoords = new HashMap<>();
+    // משתנים שה-Abilities שלך דורש
+    public final Map<UUID, Deque<Snapshot>> history = new HashMap<>();
+    public final Map<UUID, Location> awaitingCoords = new HashMap<>();
     public final Map<UUID, Long> braceletsUntil = new HashMap<>();
+    public final Map<UUID, Double> kinetic = new HashMap<>();
+    public final Map<UUID, Long> shieldUntil = new HashMap<>();
 
-    // מחלקת עזר פנימית ל-Snapshot
+    // מחלקת Snapshot מעודכנת עם המתודות loc() ו-health()
     public static class Snapshot {
-        // הוסף כאן את שדות ה-Snapshot שלך במידת הצורך
+        private final Location location;
+        private final double health;
+
+        public Snapshot(Location location, double health) {
+            this.location = location;
+            this.health = health;
+        }
+
+        public Location loc() {
+            return location;
+        }
+
+        public double health() {
+            return health;
+        }
     }
 
     @Override
@@ -58,14 +76,11 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
         keepHeroOnDeath = getConfig().getBoolean("settings.keep-hero-on-death", true);
     }
 
-    // מתודות עזר שה-Abilities מנסה לקרוא מתוך ה-Plugin
     public double damageMult(Player player) {
-        // מחזיר את מכפיל הנזק (ניתן להתאים לפי הגיבור או הגדרות הקונפיג)
         return globalDamageMultiplier;
     }
 
     public boolean canHurt(Player attacker, LivingEntity target) {
-        // בדיקת האם מותר לפגוע בישות מסוימת (למשל בדיקת PvP)
         if (target instanceof Player && !getConfig().getBoolean("settings.pvp-abilities", true)) {
             return false;
         }

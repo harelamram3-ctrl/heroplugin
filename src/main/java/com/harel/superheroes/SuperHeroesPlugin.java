@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,9 +26,18 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
     private double globalDamageMultiplier;
     private boolean keepHeroOnDeath;
 
+    // משתנים ומחלקות עזר שה-Abilities שלך דורש
+    public final Map<UUID, Object> history = new HashMap<>();
+    public final Map<UUID, Object> awaitingCoords = new HashMap<>();
+    public final Map<UUID, Long> braceletsUntil = new HashMap<>();
+
+    // מחלקת עזר פנימית ל-Snapshot
+    public static class Snapshot {
+        // הוסף כאן את שדות ה-Snapshot שלך במידת הצורך
+    }
+
     @Override
     public void onEnable() {
-        // שמירת קובץ ה-config הברירת מחדל אם אינו קיים
         saveDefaultConfig();
         loadConfigValues();
 
@@ -36,9 +46,9 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
             getCommand("hero").setExecutor(this);
         }
 
-        // לולאת חלקיקי תעופה שרצה כל 2 טאקים
+        // לולאת חלקיקי תעופה
         Bukkit.getScheduler().runTaskTimer(this, this::playFlightAnimations, 0L, 2L);
-        getLogger().info("SuperHeroes 2.0 has been enabled successfully with full config support!");
+        getLogger().info("SuperHeroes 2.0 has been enabled successfully!");
     }
 
     public void loadConfigValues() {
@@ -48,12 +58,24 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
         keepHeroOnDeath = getConfig().getBoolean("settings.keep-hero-on-death", true);
     }
 
+    // מתודות עזר שה-Abilities מנסה לקרוא מתוך ה-Plugin
+    public double damageMult(Player player) {
+        // מחזיר את מכפיל הנזק (ניתן להתאים לפי הגיבור או הגדרות הקונפיג)
+        return globalDamageMultiplier;
+    }
+
+    public boolean canHurt(Player attacker, LivingEntity target) {
+        // בדיקת האם מותר לפגוע בישות מסוימת (למשל בדיקת PvP)
+        if (target instanceof Player && !getConfig().getBoolean("settings.pvp-abilities", true)) {
+            return false;
+        }
+        return true;
+    }
+
     private void playFlightAnimations() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.isFlying()) continue;
-
-            // בדיקה האם העולם הנוכחי מושבת בקונפיג
-            if (disabledWorlds.contains(player.getWorld().getName())) continue;
+            if (disabledWorlds != null && disabledWorlds.contains(player.getWorld().getName())) continue;
 
             String hero = playerHeroes.getOrDefault(player.getUniqueId(), "NONE").toUpperCase();
             Location loc = player.getLocation();
@@ -100,13 +122,6 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
 
         if (args[0].equalsIgnoreCase("set")) {
             String heroName = args[1].toUpperCase();
-            
-            // בדיקה האם הגיבור קיים בקונפיג תחת רשימת ה-heroes
-            if (!getConfig().contains("heroes." + heroName)) {
-                sender.sendMessage("§cהגיבור '" + heroName + "' אינו קיים בקובץ ההגדרות!");
-                return true;
-            }
-
             Player target = Bukkit.getPlayer(args[2]);
             if (target == null) {
                 sender.sendMessage("§cהשחקן המבוקש אינו מחובר.");
@@ -114,10 +129,7 @@ public final class SuperHeroesPlugin extends JavaPlugin implements Listener, Com
             }
 
             playerHeroes.put(target.getUniqueId(), heroName);
-            
-            // שליפת שם הראש מהקונפיג (דוגמה לשימוש בהגדרות הראשים שלך)
-            String headVal = getConfig().getString("heads." + heroName, "Default");
-            sender.sendMessage("§aהגיבור של §e" + target.getName() + " §aהוגדר בהצלחה ל-§b" + heroName + " §7(ראש: " + headVal + ")");
+            sender.sendMessage("§aהגיבור של §e" + target.getName() + " §aהוגדר בהצלחה ל-§b" + heroName);
             target.sendMessage("§aהוגדרת בהצלחה כגיבור: §b" + heroName);
         }
         return true;

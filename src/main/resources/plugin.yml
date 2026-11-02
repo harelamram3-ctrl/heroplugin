@@ -1,9 +1,9 @@
-name: HeroPlugin
-version: 1.0
-main: com.example.heroplugin.HeroPlugin
-api-version: '1.20'
+name: SuperHeroes
+version: 2.0.0
+main: com.harel.superheroes.SuperHeroesPlugin
+api-version: '21'
 commands:
   hero:
-    description: קובע גיבור לשחקן
-    permission: heroplugin.admin
-    usage: /hero <hero> <player>
+    description: ניהול גיבורי-על שרת
+    permission: superheroes.admin
+    usage: /hero set <hero> <player>

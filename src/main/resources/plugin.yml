@@ -1,0 +1,17 @@
+name: SuperHeroes
+version: ${project.version}
+main: com.harel.superheroes.SuperHeroesPlugin
+api-version: '1.21'
+description: Become a superhero with armor, powers, ultimates and a hero menu!
+commands:
+  hero:
+    description: Choose a superhero, open the menu, see stats
+    usage: /hero [menu|list|info <hero>|stats|ult|none|reload|set <player> <hero>|<hero>]
+    aliases: [heroes, sh]
+    permission: superheroes.use
+permissions:
+  superheroes.use:
+    default: true
+  superheroes.admin:
+    default: op
+    description: Reload config and set heroes for other players

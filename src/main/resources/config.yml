@@ -1,0 +1,55 @@
+# SuperHeroes 2.0 configuration
+settings:
+  # Worlds where powers are disabled
+  disabled-worlds: []
+  # Multiplies ALL ability damage (1.0 = default)
+  damage-multiplier: 1.0
+  # Multiplies ALL cooldowns (0.5 = half cooldowns)
+  cooldown-multiplier: 1.0
+  # Ultimate charge needed (percent points) and gain per damage point dealt
+  ultimate-charge-max: 100
+  ultimate-charge-per-damage: 2.5
+  ultimate-charge-per-kill: 25
+  # Keep selected hero after death / restart
+  keep-hero-on-death: true
+  # Can heroes' abilities hurt other players? (false = only mobs)
+  pvp-abilities: true
+  # Show the ultimate-charge boss bar
+  show-bossbar: true
+
+# Hero heads (worn instead of a helmet).
+# Value = a Minecraft username (its skin face is used) OR a base64 texture "Value" copied
+# from minecraft-heads.com (any string longer than 60 characters is treated as a texture).
+# Replace these with the exact head you want for each hero.
+heads:
+  BATMAN: "Batman"
+  BLACKPANTHER: "BlackPanther"
+  CAPTAINAMERICA: "CaptainAmerica"
+  DEADPOOL: "Deadpool"
+  DOCTORSTRANGE: "DoctorStrange"
+  FLASH: "TheFlash"
+  GREENLANTERN: "GreenLantern"
+  HULK: "Hulk"
+  IRONMAN: "IronMan"
+  SPIDERMAN: "Spiderman"
+  STORM: "Storm"
+  SUPERMAN: "Superman"
+  THOR: "Thor"
+  WONDERWOMAN: "WonderWoman"
+
+# Per-hero overrides. Leave out any hero to use defaults.
+heroes:
+  BATMAN:        { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  BLACKPANTHER:  { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  CAPTAINAMERICA: { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  DEADPOOL:      { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  DOCTORSTRANGE: { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  FLASH:         { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  GREENLANTERN:  { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  HULK:          { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  IRONMAN:       { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  SPIDERMAN:     { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  STORM:         { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  SUPERMAN:      { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  THOR:          { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
+  WONDERWOMAN:   { enabled: true, damage-multiplier: 1.0, cooldown-multiplier: 1.0 }
